@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_git_app/presentation/features/repository_list/ui/pages/repository_list_main_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
-      home: Container(),
+      home: const RepositoryListMainScreen(),
     );
   }
 }
