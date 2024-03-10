@@ -21,5 +21,5 @@ class NetworkResponse extends Equatable {
 }
 
 abstract class NetworkClient {
-  Future<Either<HttpResponse, BaseException>> get(HttpApiRequest apiRequest);
+  Future<Either<NetworkResponse, BaseException>> get(HttpApiRequest apiRequest);
 }

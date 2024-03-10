@@ -17,55 +17,62 @@ class DioNetworkClientImpl extends NetworkClient {
 
   @override
   @visibleForTesting
-  Future<Either<HttpResponse, BaseException>> get(
+  Future<Either<NetworkResponse, BaseException>> get(
       HttpApiRequest apiRequest) async {
     try {
-      final response = await _dio.get(
-        apiRequest.url,
-        queryParameters: apiRequest.apiParam.queryParams,
-      );
+      final response = await _dio.get(apiRequest.url,
+          queryParameters: apiRequest.apiParam.queryParams,
+          options: Options(
+            headers: apiRequest.headers,
+          ));
       return _onRequestResponse(response);
-    } on DioException catch (e) {
-      return _onExceptionResponse(e);
+    } on DioException catch (exception) {
+      return _onExceptionResponse(exception);
     }
   }
 
-  Either<HttpResponse, BaseException> _onExceptionResponse(DioException error) {
-    if (error.response != null) {
-      return _onRequestResponse(error.response!);
-    } else {
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return Right(
-            NetworkTimeOutException(
-              error.message!,
-            ),
-          );
-        default:
-          break;
-      }
+  Either<NetworkResponse, BaseException> _onExceptionResponse(
+      DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return Right(
+          NetworkTimeOutException(
+            error.message!,
+          ),
+        );
+      default:
+        break;
     }
-    return Right(
+    return const Right(
       UnknownNetworkException(
-        {
-          'message': 'Error happened while handling the error response',
-          'type': error.type.name,
-          'details': error.message,
-        },
+        "Error happened while handling the error response",
       ),
     );
   }
 
-  Either<HttpResponse, BaseException> _onRequestResponse(
+  Either<NetworkResponse, BaseException> _onRequestResponse(
       Response<dynamic> response) {
-    final HttpResponse data =
-        response.data is Map ? response.data : {'data': response.data ?? ''};
+    // final HttpResponse data =
+    //     response.data is Map ? response.data : {'data': response.data ?? ''};
     if (response.statusCode != null && response.statusCode! == 200) {
-      return Left(data);
+      return Left(
+        NetworkResponse(
+          data: response.data,
+          statusCode: response.statusCode!,
+          headers: response.headers.map.map(
+            (key, value) => MapEntry(key, value.isNotEmpty ? value.first : ''),
+          ),
+        ),
+      );
     } else {
-      return Right(NetworkException(response.statusCode ?? -1, data));
+      return Right(
+        NetworkException(
+          response.statusCode ?? -1,
+          "It is a network exception",
+        ),
+      );
     }
   }
 }

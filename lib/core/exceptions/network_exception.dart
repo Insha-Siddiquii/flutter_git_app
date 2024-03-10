@@ -2,7 +2,7 @@ import 'package:flutter_git_app/core/exceptions/base_exception.dart';
 
 class NetworkException extends BaseException {
   final int httpCode;
-  final Map<String, dynamic> details;
+  final String details;
   final String errorType;
 
   const NetworkException(this.httpCode, this.details,

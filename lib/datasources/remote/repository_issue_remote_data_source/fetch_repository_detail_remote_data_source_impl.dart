@@ -7,28 +7,29 @@ import 'package:flutter_git_app/core/network_client/network_client.dart';
 import 'package:flutter_git_app/core/network_client/util/http_api_header_handler.dart';
 import 'package:flutter_git_app/core/network_client/util/http_api_request_constructor.dart';
 import 'package:flutter_git_app/core/network_client/util/http_method.dart';
-import 'package:flutter_git_app/datasources/models/repository_list_model/repository_list_model.dart';
-import 'package:flutter_git_app/datasources/remote/repository_list_remote_data_source/fetch_repository_list_remote_data_source.dart';
+import 'package:flutter_git_app/datasources/models/repository_issue_model/repository_issue_model.dart';
+import 'package:flutter_git_app/datasources/remote/repository_issue_remote_data_source/fetch_repository_issue_remote_data_source.dart';
 
-class FetchRepositoryListRemoteDataSourceImpl
-    implements FetchRepositoryListRemoteDataSource {
+class FetchRepositoryDetailRemoteDataSourceImpl
+    implements FetchRepositoryIssueRemoteDataSource {
   final NetworkClient networkClient;
   final HttpApiRequestConstructor apiRequestConstructor;
   final HttpApiHeaderHandler apiHeaderHandler;
   String page = '';
 
-  FetchRepositoryListRemoteDataSourceImpl({
+  FetchRepositoryDetailRemoteDataSourceImpl({
     required this.networkClient,
-    required this.apiRequestConstructor,
     required this.apiHeaderHandler,
+    required this.apiRequestConstructor,
   });
 
   @override
-  Future<Either<List<RepositoryListModel>, BaseException>>
-      fetchRemoteRepositoryList({
+  Future<Either<List<RepositoryIssueModel>, BaseException>>
+      fetchRepositoryIssues({
+    required String ownerName,
     required String repositoryName,
   }) async {
-    final List<RepositoryListModel> repoListModel = List.empty(growable: true);
+    final List<RepositoryIssueModel> listIssues = List.empty(growable: true);
 
     /// for the first time
 
@@ -39,16 +40,15 @@ class FetchRepositoryListRemoteDataSourceImpl
     /// reaches page end
 
     if (page == "-1") {
-      return Left(repoListModel);
+      return Left(listIssues);
     }
 
     /// contruct api request
 
     final apiRequest = apiRequestConstructor.constructApiRequest(
       method: HttpMethod.get,
-      url: "$baseUrl/search/repositories/",
+      url: "$baseUrl/repos/$ownerName/$repositoryName/",
       apiParam: _constructApiParam(
-        repositoryName,
         page,
       ),
     );
@@ -58,19 +58,14 @@ class FetchRepositoryListRemoteDataSourceImpl
     final response = await networkClient.get(apiRequest);
 
     /// handles the response
-
     return response.fold((networkResponse) {
       try {
         String linkHeader = networkResponse.headers["Link"] ?? "";
         page = apiHeaderHandler.extractNextPage(linkHeader);
 
-        final responseDataList = networkResponse.data["items"];
+        listIssues.add(RepositoryIssueModel.fromJson(networkResponse.data));
 
-        for (var element in responseDataList) {
-          repoListModel.add(RepositoryListModel.fromJson(element));
-        }
-
-        return Left(repoListModel);
+        return Left(listIssues);
       } catch (e) {
         return Right(
           NetworkException(
@@ -82,12 +77,13 @@ class FetchRepositoryListRemoteDataSourceImpl
     }, Right.new);
   }
 
-  ApiParam _constructApiParam(String repositoryName, String page) {
+  ApiParam _constructApiParam(String page) {
     return ApiParam(queryParams: {
-      'q': repositoryName,
-      'sort': 'full_name',
-      'per_page': perPage,
+      'state': 'open',
+      'sort': 'created',
+      'direction': 'desc',
       'page': page,
+      'per_page': perPage,
     });
   }
 }
