@@ -11,8 +11,8 @@ RepositoryListModel _$RepositoryListModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       name: json['name'] as String,
       fullName: json['full_name'] as String,
-      description: json['description'] as String,
-      language: json['language'] as String,
+      description: json['description'] as String?,
+      language: json['language'] as String?,
       openIssuesCount: json['open_issues_count'] as int,
     );
 

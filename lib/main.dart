@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_git_app/core/network_client/di/network_module.dart';
 import 'package:flutter_git_app/presentation/features/repository_list/ui/pages/repository_list_main_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NetworkModule().setup();
   runApp(const MyApp());
 }
 
@@ -14,6 +17,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: Colors.white,
+          cursorColor: Colors.white,
+          selectionHandleColor: Colors.white,
+        ),
         useMaterial3: true,
       ),
       home: const RepositoryListMainScreen(),

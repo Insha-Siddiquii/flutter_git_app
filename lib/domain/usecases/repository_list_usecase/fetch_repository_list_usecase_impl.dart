@@ -13,7 +13,13 @@ class FetchRepositoryListUseCaseImpl implements FetchRepositoryListUseCase {
   @override
   Future<Either<List<RepositoryListEntity>, BaseException>> call({
     required String repositoryName,
+    bool isNewSearch = false,
+    bool isReload = false,
   }) {
-    return repository.fetchRepositoryList(repositoryName: repositoryName);
+    return repository.fetchRepositoryList(
+      repositoryName: repositoryName,
+      isNewSearch: isNewSearch,
+      isReload: isReload,
+    );
   }
 }

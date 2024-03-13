@@ -12,10 +12,16 @@ class FetchRepositoryListRepositoryImpl
     required this.dataSource,
   });
   @override
-  Future<Either<List<RepositoryListEntity>, BaseException>> fetchRepositoryList(
-      {required String repositoryName}) async {
+  Future<Either<List<RepositoryListEntity>, BaseException>>
+      fetchRepositoryList({
+    required String repositoryName,
+    bool isReload = false,
+    bool isNewSearch = false,
+  }) async {
     final response = await dataSource.fetchRemoteRepositoryList(
       repositoryName: repositoryName,
+      isNewSearch: isNewSearch,
+      isReload: isReload,
     );
 
     return response.bimap(
@@ -24,8 +30,8 @@ class FetchRepositoryListRepositoryImpl
                   id: model.id,
                   name: model.name,
                   ownerName: _getOwnerName(model.fullName),
-                  description: model.description,
-                  language: model.language,
+                  description: model.description ?? "",
+                  language: model.language ?? "",
                   openIssuesCount: model.openIssuesCount,
                 ))
             .toList(),

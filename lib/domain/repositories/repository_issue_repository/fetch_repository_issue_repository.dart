@@ -7,5 +7,6 @@ abstract class FetchRepositoryIssueRepository {
       fetchRepositoryIssues({
     required String ownerName,
     required String repositoryName,
+    bool isReload = false,
   });
 }

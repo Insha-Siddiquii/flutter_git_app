@@ -15,10 +15,12 @@ class FetchRepositoryIssueUseCaseImpl implements FetchRepositoryIssueUseCase {
   Future<Either<List<RepositoryIssueEntity>, BaseException>> call({
     required String ownerName,
     required String repositoryName,
+    bool isReload = false,
   }) {
     return repository.fetchRepositoryIssues(
       ownerName: ownerName,
       repositoryName: repositoryName,
+      isReload: isReload,
     );
   }
 }

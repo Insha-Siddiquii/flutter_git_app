@@ -12,9 +12,9 @@ class RepositoryListModel extends Equatable {
   @JsonKey(name: 'full_name')
   final String fullName;
   @JsonKey(name: 'description')
-  final String description;
+  final String? description;
   @JsonKey(name: 'language')
-  final String language;
+  final String? language;
   @JsonKey(name: 'open_issues_count')
   final int openIssuesCount;
 

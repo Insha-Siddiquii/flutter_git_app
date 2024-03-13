@@ -13,11 +13,15 @@ class FetchRepositoryIssueRepositoryImpl
 
   @override
   Future<Either<List<RepositoryIssueEntity>, BaseException>>
-      fetchRepositoryIssues(
-          {required String ownerName, required String repositoryName}) async {
+      fetchRepositoryIssues({
+    required String ownerName,
+    required String repositoryName,
+    bool isReload = false,
+  }) async {
     final response = await dataSource.fetchRepositoryIssues(
       ownerName: ownerName,
       repositoryName: repositoryName,
+      isReload: isReload,
     );
 
     return response.bimap((data) {
@@ -39,7 +43,9 @@ class FetchRepositoryIssueRepositoryImpl
     DateTime dateTime = DateTime.parse(dateTimeString);
     Duration difference = DateTime.now().difference(dateTime);
 
-    if (difference.inHours < 24) {
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
       return '${difference.inHours} hours ago';
     } else if (difference.inDays == 1) {
       return 'yesterday';

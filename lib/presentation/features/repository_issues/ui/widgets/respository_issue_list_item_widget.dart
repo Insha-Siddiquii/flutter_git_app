@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_git_app/presentation/entities/repository_issue/repository_issue_ui_entity.dart';
 import 'package:flutter_git_app/presentation/utils/ui_constants.dart';
 
 class RepositoryIssueListItemWidget extends StatelessWidget {
+  final RepositoryIssueUiEntity itemUiEntity;
   const RepositoryIssueListItemWidget({
     super.key,
+    required this.itemUiEntity,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -16,16 +19,16 @@ class RepositoryIssueListItemWidget extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
+            const Icon(
               Icons.report_outlined,
               color: Colors.green,
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "Link to Issue. Changing Flutter branches seems to make Dart-Code behave flakily",
-                  style: TextStyle(
+                  itemUiEntity.title,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -38,44 +41,47 @@ class RepositoryIssueListItemWidget extends StatelessWidget {
           ],
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
 
         Padding(
-          padding: EdgeInsets.only(left: 26.0),
+          padding: const EdgeInsets.only(left: 26.0),
           child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              direction: Axis.horizontal,
-              children: [
-                /// Issue number
-                Text(
-                  "#144902",
-                  style: TextStyle(
-                    color: onBackgroundSurface,
-                  ),
+            crossAxisAlignment: WrapCrossAlignment.center,
+            direction: Axis.horizontal,
+            children: [
+              /// Issue number
+              Text(
+                "#${itemUiEntity.number.toString()}",
+                style: const TextStyle(
+                  color: onBackgroundSurface,
                 ),
-                SizedBox(
-                  width: 8,
-                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
 
-                /// Issue date
+              /// Issue date
 
-                Text(
-                  "opened 1 hour ago by andrewKate",
-                  style: TextStyle(
-                    color: onBackgroundSurface,
-                  ),
+              Text(
+                "opened ${itemUiEntity.createdAt} by ${itemUiEntity.userName}",
+                style: const TextStyle(
+                  color: onBackgroundSurface,
                 ),
-              ]),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
-        Divider(
+        const Divider(
           color: onBackgroundSurface,
         ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
       ],

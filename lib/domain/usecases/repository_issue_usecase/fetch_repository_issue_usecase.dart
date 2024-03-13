@@ -6,5 +6,6 @@ abstract class FetchRepositoryIssueUseCase {
   Future<Either<List<RepositoryIssueEntity>, BaseException>> call({
     required String ownerName,
     required String repositoryName,
+    bool isReload = false,
   });
 }

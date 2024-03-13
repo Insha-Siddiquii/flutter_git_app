@@ -27,12 +27,14 @@ class FetchRepositoryListRemoteDataSourceImpl
   Future<Either<List<RepositoryListModel>, BaseException>>
       fetchRemoteRepositoryList({
     required String repositoryName,
+    bool isReload = false,
+    bool isNewSearch = false,
   }) async {
     final List<RepositoryListModel> repoListModel = List.empty(growable: true);
 
     /// for the first time
 
-    if (page.isEmpty) {
+    if (page.isEmpty || isReload || isNewSearch) {
       page = "1";
     }
 
@@ -46,7 +48,7 @@ class FetchRepositoryListRemoteDataSourceImpl
 
     final apiRequest = apiRequestConstructor.constructApiRequest(
       method: HttpMethod.get,
-      url: "$baseUrl/search/repositories/",
+      url: "$baseUrl/search/repositories",
       apiParam: _constructApiParam(
         repositoryName,
         page,
@@ -61,7 +63,7 @@ class FetchRepositoryListRemoteDataSourceImpl
 
     return response.fold((networkResponse) {
       try {
-        String linkHeader = networkResponse.headers["Link"] ?? "";
+        String linkHeader = networkResponse.headers["link"] ?? "";
         page = apiHeaderHandler.extractNextPage(linkHeader);
 
         final responseDataList = networkResponse.data["items"];

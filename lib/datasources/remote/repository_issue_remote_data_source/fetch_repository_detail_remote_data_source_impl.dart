@@ -28,12 +28,13 @@ class FetchRepositoryDetailRemoteDataSourceImpl
       fetchRepositoryIssues({
     required String ownerName,
     required String repositoryName,
+    bool isReload = false,
   }) async {
     final List<RepositoryIssueModel> listIssues = List.empty(growable: true);
 
     /// for the first time
 
-    if (page.isEmpty) {
+    if (page.isEmpty || isReload) {
       page = "1";
     }
 
@@ -47,7 +48,7 @@ class FetchRepositoryDetailRemoteDataSourceImpl
 
     final apiRequest = apiRequestConstructor.constructApiRequest(
       method: HttpMethod.get,
-      url: "$baseUrl/repos/$ownerName/$repositoryName/",
+      url: "$baseUrl/repos/$ownerName/$repositoryName/issues",
       apiParam: _constructApiParam(
         page,
       ),
@@ -60,10 +61,14 @@ class FetchRepositoryDetailRemoteDataSourceImpl
     /// handles the response
     return response.fold((networkResponse) {
       try {
-        String linkHeader = networkResponse.headers["Link"] ?? "";
+        String linkHeader = networkResponse.headers["link"] ?? "";
         page = apiHeaderHandler.extractNextPage(linkHeader);
 
-        listIssues.add(RepositoryIssueModel.fromJson(networkResponse.data));
+        final responseDataList = networkResponse.data["items"];
+
+        for (var element in responseDataList) {
+          listIssues.add(RepositoryIssueModel.fromJson(element));
+        }
 
         return Left(listIssues);
       } catch (e) {

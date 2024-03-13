@@ -5,5 +5,7 @@ import 'package:flutter_git_app/domain/entities/repository_list/repository_list_
 abstract class FetchRepositoryListUseCase {
   Future<Either<List<RepositoryListEntity>, BaseException>> call({
     required String repositoryName,
+    bool isNewSearch = false,
+    bool isReload = false,
   });
 }

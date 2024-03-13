@@ -54,12 +54,12 @@ class DioNetworkClientImpl extends NetworkClient {
 
   Either<NetworkResponse, BaseException> _onRequestResponse(
       Response<dynamic> response) {
-    // final HttpResponse data =
-    //     response.data is Map ? response.data : {'data': response.data ?? ''};
+    final HttpResponse data =
+        response.data is Map ? response.data : {'items': response.data ?? ''};
     if (response.statusCode != null && response.statusCode! == 200) {
       return Left(
         NetworkResponse(
-          data: response.data,
+          data: data,
           statusCode: response.statusCode!,
           headers: response.headers.map.map(
             (key, value) => MapEntry(key, value.isNotEmpty ? value.first : ''),

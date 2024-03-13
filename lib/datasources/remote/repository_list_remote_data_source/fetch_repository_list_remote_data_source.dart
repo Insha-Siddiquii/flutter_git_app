@@ -6,5 +6,7 @@ abstract class FetchRepositoryListRemoteDataSource {
   Future<Either<List<RepositoryListModel>, BaseException>>
       fetchRemoteRepositoryList({
     required String repositoryName,
+    bool isNewSearch = false,
+    bool isReload = false,
   });
 }

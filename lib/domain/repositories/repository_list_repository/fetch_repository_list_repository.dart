@@ -6,5 +6,7 @@ abstract class FetchRepositoryListRepository {
   Future<Either<List<RepositoryListEntity>, BaseException>>
       fetchRepositoryList({
     required String repositoryName,
+    bool isNewSearch = false,
+    bool isReload = false,
   });
 }
