@@ -28,7 +28,7 @@ class RepositoryIssueListModuleImpl extends RepositoryIssueListModule {
   @override
   FutureOr<void> setup() {
     final FetchRepositoryIssueRemoteDataSource dataSource =
-        FetchRepositoryDetailRemoteDataSourceImpl(
+        FetchRepositoryIssueRemoteDataSourceImpl(
       apiHeaderHandler: getIt.call<HttpApiHeaderHandler>(),
       networkClient: getIt.call<NetworkClient>(),
       apiRequestConstructor: getIt.call<HttpApiRequestConstructor>(),

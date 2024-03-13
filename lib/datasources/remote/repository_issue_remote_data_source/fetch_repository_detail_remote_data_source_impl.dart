@@ -10,14 +10,14 @@ import 'package:flutter_git_app/core/network_client/util/http_method.dart';
 import 'package:flutter_git_app/datasources/models/repository_issue_model/repository_issue_model.dart';
 import 'package:flutter_git_app/datasources/remote/repository_issue_remote_data_source/fetch_repository_issue_remote_data_source.dart';
 
-class FetchRepositoryDetailRemoteDataSourceImpl
+class FetchRepositoryIssueRemoteDataSourceImpl
     implements FetchRepositoryIssueRemoteDataSource {
   final NetworkClient networkClient;
   final HttpApiRequestConstructor apiRequestConstructor;
   final HttpApiHeaderHandler apiHeaderHandler;
   String page = '';
 
-  FetchRepositoryDetailRemoteDataSourceImpl({
+  FetchRepositoryIssueRemoteDataSourceImpl({
     required this.networkClient,
     required this.apiHeaderHandler,
     required this.apiRequestConstructor,

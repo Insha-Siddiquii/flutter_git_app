@@ -59,9 +59,10 @@ void main() {
     blocTest<RepositoryListBloc, RepositoryListState>(
       'emits [RepositoryListLoadingState, RepositoryListLoadedState] when GetRepositoryListEvent is added',
       build: () {
-        when(() =>
-                mockUseCase.call(repositoryName: any(named: 'repositoryName')))
-            .thenAnswer((_) async => Left(mockRepositoryListEntity));
+        when(() => mockUseCase.call(
+              repositoryName: any(named: 'repositoryName'),
+              isNewSearch: true,
+            )).thenAnswer((_) async => Left(mockRepositoryListEntity));
         return repositoryListBloc;
       },
       act: (bloc) => bloc.add(GetRepositoryListEvent(searchTerm: 'flutter')),
@@ -87,16 +88,24 @@ void main() {
             .thenAnswer((_) async => Left(mockRepositoryListEntity));
         return repositoryListBloc;
       },
+      seed: () => RepositoryListLoadedState(
+        repositoryList: mockRepositoryListUiEntity,
+        searchTerm: "flutter",
+        isLastPage: false,
+      ),
       act: (bloc) =>
           bloc.add(GetRepositoryListNextPageEvent(searchTerm: 'flutter')),
       expect: () => [
-        const RepositoryListLoadingNextPageState(
-          repositoryList: [],
-          searchTerm: '',
+        RepositoryListLoadingNextPageState(
+          repositoryList: mockRepositoryListUiEntity,
+          searchTerm: 'flutter',
           isLastPage: false,
         ),
         RepositoryListLoadedState(
-          repositoryList: mockRepositoryListUiEntity,
+          repositoryList: [
+            ...mockRepositoryListUiEntity,
+            ...mockRepositoryListUiEntity
+          ],
           searchTerm: 'flutter',
           isLastPage: false,
         ),
@@ -111,10 +120,15 @@ void main() {
             .thenAnswer((_) async => Left(mockRepositoryListEntity));
         return repositoryListBloc;
       },
+      seed: () => RepositoryListLoadedState(
+        repositoryList: mockRepositoryListUiEntity,
+        searchTerm: "flutter",
+        isLastPage: false,
+      ),
       act: (bloc) => bloc.add(ReloadRepositoryListEvent(searchTerm: 'flutter')),
       expect: () => [
-        const RepositoryListReloadingState(
-          repositoryList: [],
+        RepositoryListReloadingState(
+          repositoryList: mockRepositoryListUiEntity,
           searchTerm: 'flutter',
           isLastPage: false,
         ),
@@ -129,21 +143,28 @@ void main() {
     blocTest<RepositoryListBloc, RepositoryListState>(
       'emits [RepositoryListErrorState] when FetchRepositoryListUseCase returns a failure',
       build: () {
-        when(() =>
-                mockUseCase.call(repositoryName: any(named: 'repositoryName')))
+        when(() => mockUseCase.call(
+                  repositoryName: any(named: 'repositoryName'),
+                  isNewSearch: true,
+                ))
             .thenAnswer(
                 (_) async => const Right(NetworkException(404, 'Error')));
         return repositoryListBloc;
       },
+      seed: () => RepositoryListLoadedState(
+        repositoryList: mockRepositoryListUiEntity,
+        searchTerm: "flutter",
+        isLastPage: false,
+      ),
       act: (bloc) => bloc.add(GetRepositoryListEvent(searchTerm: 'flutter')),
       expect: () => [
-        const RepositoryListLoadingState(
-          repositoryList: [],
+        RepositoryListLoadingState(
+          repositoryList: mockRepositoryListUiEntity,
           searchTerm: 'flutter',
           isLastPage: false,
         ),
-        const RepositoryListErrorState(
-          repositoryList: [],
+        RepositoryListErrorState(
+          repositoryList: mockRepositoryListUiEntity,
           searchTerm: 'flutter',
           errorMessage: 'Something went wrong. Please try again',
           isLastPage: false,
@@ -154,23 +175,28 @@ void main() {
     blocTest<RepositoryListBloc, RepositoryListState>(
       'emits [RepositoryListEmptyState] when FetchRepositoryListUseCase returns an empty list',
       build: () {
-        when(() =>
-                mockUseCase.call(repositoryName: any(named: 'repositoryName')))
-            .thenAnswer((_) async => const Left([]));
+        when(() => mockUseCase.call(
+              repositoryName: any(named: 'repositoryName'),
+              isNewSearch: true,
+            )).thenAnswer((_) async => const Left([]));
         return repositoryListBloc;
       },
+      seed: () => RepositoryListLoadedState(
+        repositoryList: mockRepositoryListUiEntity,
+        searchTerm: "flutter",
+        isLastPage: false,
+      ),
       act: (bloc) => bloc.add(GetRepositoryListEvent(searchTerm: 'flutter')),
       expect: () => [
-        const RepositoryListLoadingState(
-          repositoryList: [],
+        RepositoryListLoadingState(
+          repositoryList: mockRepositoryListUiEntity,
           searchTerm: 'flutter',
           isLastPage: false,
         ),
         const RepositoryListEmptyState(
           repositoryList: [],
           searchTerm: '',
-          message:
-              'Seems like no search begins yet. Please try again with new search',
+          message: 'No result with this search. Try again with new search',
           isLastPage: false,
         ),
       ],
