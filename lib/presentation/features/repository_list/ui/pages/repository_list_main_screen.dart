@@ -13,7 +13,11 @@ import 'package:flutter_git_app/presentation/utils/ui_constants.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RepositoryListMainScreen extends StatefulWidget {
-  const RepositoryListMainScreen({super.key});
+  final RepositoryListModule? repositoryListModule;
+  const RepositoryListMainScreen({
+    this.repositoryListModule,
+    super.key,
+  });
 
   @override
   State<RepositoryListMainScreen> createState() =>
@@ -33,7 +37,8 @@ class _RepositoryListMainScreenState extends State<RepositoryListMainScreen> {
   }
 
   void _initDependencies() {
-    _repositoryListModule = RepositoryListModuleImpl();
+    _repositoryListModule =
+        widget.repositoryListModule ?? RepositoryListModuleImpl();
     _repositoryListModule.setup();
     _bloc = _repositoryListModule.repositoryListBloc;
     _refreshController = RefreshController(initialRefresh: false);

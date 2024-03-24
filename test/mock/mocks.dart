@@ -4,6 +4,7 @@ import 'package:flutter_git_app/core/network_client/util/http_api_header_handler
 import 'package:flutter_git_app/core/network_client/util/http_api_request_constructor.dart';
 import 'package:flutter_git_app/datasources/remote/repository_issue_remote_data_source/fetch_repository_issue_remote_data_source.dart';
 import 'package:flutter_git_app/datasources/remote/repository_list_remote_data_source/fetch_repository_list_remote_data_source.dart';
+import 'package:flutter_git_app/di/repository_list/repository_list_module.dart';
 import 'package:flutter_git_app/domain/repositories/repository_issue_repository/fetch_repository_issue_repository.dart';
 import 'package:flutter_git_app/domain/repositories/repository_list_repository/fetch_repository_list_repository.dart';
 import 'package:flutter_git_app/domain/usecases/repository_issue_usecase/fetch_repository_issue_usecase.dart';
@@ -41,3 +42,5 @@ class MockHttpApiHeaderHandler extends Mock implements HttpApiHeaderHandler {}
 class MockRepositoryListBloc
     extends MockBloc<RepositoryListEvent, RepositoryListState>
     implements RepositoryListBloc {}
+
+class MockRepositoryListModule extends Mock implements RepositoryListModule {}
