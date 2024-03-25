@@ -20,7 +20,7 @@ class NetworkModule extends DiModule {
       HttpApiHeaderHandlerImpl.new,
     );
 
-    getIt.registerSingleton<NetworkClient>(client);
+    getIt.registerLazySingleton<NetworkClient>(() => client);
 
     getIt.registerLazySingleton<HttpApiRequestConstructor>(
       HttpApiRequestConstructorImpl.new,
