@@ -13,6 +13,9 @@ import 'package:flutter_git_app/presentation/features/repository_list/bloc/repos
 import 'package:flutter_git_app/presentation/features/repository_list/bloc/repository_list_bloc_event.dart';
 import 'package:flutter_git_app/presentation/features/repository_list/bloc/repository_list_bloc_state.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'mock_functions.dart';
 
 class MockFetchRepositoryListUseCase extends Mock
     implements FetchRepositoryListUseCase {}
@@ -44,3 +47,13 @@ class MockRepositoryListBloc
     implements RepositoryListBloc {}
 
 class MockRepositoryListModule extends Mock implements RepositoryListModule {}
+
+class MockRefreshController extends Mock implements RefreshController {}
+
+class MockRepositoryListState extends Mock implements RepositoryListState {}
+
+class MockOnPullToRefresh extends Mock implements OnPullToRefresh {}
+
+class MockOnTap extends Mock implements OnTap {}
+
+class MockOnNextPageRequest extends Mock implements OnNextPageRequest {}

@@ -21,6 +21,8 @@ void main() {
     repositoryListBloc = RepositoryListBloc(useCase: mockUseCase);
   });
 
+  /// optional function to run after the test has executed. It should be use to
+  /// clean up after a particular test case
   tearDown(() {
     repositoryListBloc.close();
   });

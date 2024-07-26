@@ -240,10 +240,74 @@ void main() {
           ),
         ),
       );
-      await widgetTester.enterText(find.byType(TextField), 'flut');
 
       /// assert
       expect(find.byType(TextField), findsOneWidget);
+    });
+
+    testWidgets(
+        'should have RepositoryListWidget when input field has 4 characters',
+        (widgetTester) async {
+      /// arrange
+      final mockRepositoryListBloc = MockRepositoryListBloc();
+      final mockRepositoryListModule = MockRepositoryListModule();
+      final mockRepositoryListEntity = [
+        const RepositoryListEntity(
+          id: 1,
+          name: 'Repo 1',
+          ownerName: 'Owner 1',
+          description: 'Description 1',
+          language: 'Dart',
+          openIssuesCount: 5,
+        ),
+        const RepositoryListEntity(
+          id: 2,
+          name: 'Repo 2',
+          ownerName: 'Owner 2',
+          description: 'Description 2',
+          language: 'JavaScript',
+          openIssuesCount: 10,
+        ),
+      ];
+
+      final mockRepositoryListUiEntity = mockRepositoryListEntity
+          .map((e) => RepositoryListUiEntity(
+                id: e.id,
+                name: e.name,
+                ownerName: e.ownerName,
+                description: e.description,
+                language: e.language,
+                openIssuesCount: e.openIssuesCount,
+              ))
+          .toList();
+
+      when(() => mockRepositoryListModule.setup())
+          .thenAnswer((_) => Future.value(null));
+
+      when(() => mockRepositoryListModule.repositoryListBloc)
+          .thenReturn(mockRepositoryListBloc);
+
+      when(() => mockRepositoryListBloc.state).thenReturn(
+        RepositoryListLoadedState(
+          isLastPage: false,
+          repositoryList: mockRepositoryListUiEntity,
+          searchTerm: '',
+        ),
+      );
+
+      /// act
+      await widgetTester.pumpWidget(
+        MaterialApp(
+          home: RepositoryListMainScreen(
+            repositoryListModule: mockRepositoryListModule,
+          ),
+        ),
+      );
+      await widgetTester.enterText(find.byType(TextField), 'flutt');
+
+      /// assert
+      expect(find.byType(RepositoryListWidget), findsOneWidget);
+      expect(find.text('flutt'), findsOneWidget);
     });
   });
 }
